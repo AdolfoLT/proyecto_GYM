@@ -1,0 +1,76 @@
+/* Panel administrativo: extiende styles.css (mismos tokens) */
+body.adm{--ok:#3DBB7F;--warn:#FFB020}
+[hidden]{display:none!important}
+.adm nav .btn{margin-left:0}
+#lg{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+@media (max-width:560px){.adm nav .u{display:none}#lg{font-size:17px}}
+.adm main{padding-block:0 var(--gap);min-height:70vh}
+.adm h2{font-size:clamp(36px,6vw,88px)}
+code{font:600 13px/1 ui-monospace,Menlo,Consolas,monospace}
+
+/* Pestañas y chips */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:8px;scrollbar-width:none;position:sticky;top:calc(68px + env(safe-area-inset-top,0px));z-index:8;background:var(--bg)}
+.tabs button,.chip{min-height:44px;padding:0 16px;font-weight:600;white-space:nowrap;background:var(--tone);transition:background-color 140ms var(--out),color 140ms var(--out),transform 140ms var(--out)}
+.tabs button:active,.chip:active{transform:scale(.97)}
+.tabs button[aria-pressed=true],.chip[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.top{display:grid;gap:24px;padding-block:clamp(32px,5vw,64px) 28px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#ch{display:flex;flex-wrap:wrap;gap:6px;margin-right:auto}
+.tools .btn{min-height:44px}
+
+/* Campos */
+#q,.fld input,.fld select{width:100%;min-height:48px;padding:0 14px;background:var(--tone);color:inherit;border:0;font:inherit;font-size:16px}
+#q{width:min(260px,100%);min-height:44px}
+.fld{display:grid;gap:6px;margin-bottom:16px;font-weight:600;font-size:14px}
+.fld input,.fld select{font-weight:400}
+dialog .acts{justify-content:flex-end;margin-top:24px}
+
+/* Tablas */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:13px;font-weight:600;opacity:.6;padding:10px 12px;text-transform:uppercase;letter-spacing:.04em}
+td{white-space:nowrap;padding:16px 12px;border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent);vertical-align:middle}
+td:first-child,th:first-child{padding-left:0}
+.ac{text-align:right;white-space:nowrap}
+.ac button{padding:10px 8px;font-weight:600;font-size:14px;text-decoration:underline;text-underline-offset:3px;transition:color 140ms var(--out)}
+.ac button.dg{color:var(--no)}
+@media (hover:hover) and (pointer:fine){tbody tr{transition:background-color 140ms var(--out)}tbody tr:hover{background:var(--tone)}}
+.vac{padding:48px 0;opacity:.6}
+.tg{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:14px}
+.tg::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.tg.ok{color:var(--ok)}.tg.warn{color:var(--warn)}.tg.no{color:var(--no)}
+
+/* Resumen */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2px}
+.kp1{display:grid;gap:12px;text-align:left;padding:clamp(18px,2.4vw,32px);background:var(--tone);transition:transform 140ms var(--out)}
+.kp1:active{transform:scale(.98)}
+.kp1 b{font-size:var(--s2);line-height:.9;letter-spacing:-.05em;font-weight:600;font-variant-numeric:tabular-nums}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:var(--m);margin-top:clamp(40px,6vw,88px)}
+.duo h3{margin-bottom:12px}
+.ls li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent)}
+@media (max-width:900px){.duo{grid-template-columns:1fr}}
+
+/* Diálogo (animación y fondo vienen de styles.css) y aviso */
+dialog{max-height:calc(100dvh - 32px);overflow:auto}
+dialog h3{margin-bottom:24px}
+dialog p{margin-bottom:20px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:40;padding:14px 22px;background:var(--ink);color:var(--bg);font-weight:600;opacity:0;pointer-events:none;transform:translate(-50%,12px);transition:opacity 200ms var(--out),transform 200ms var(--out)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* Entradas en vivo (aviso al marcar alguien su entrada en el control de acceso) */
+.entradas{position:fixed;top:calc(80px + env(safe-area-inset-top,0px));right:var(--m);z-index:35;display:grid;gap:8px;width:min(340px,calc(100vw - 2*var(--m)))}
+.entrada{display:grid;gap:2px;padding:16px 18px;background:var(--ok);color:#0D0D0C;cursor:pointer;animation:entra 260ms var(--out)}
+.entrada[data-s=warn]{background:var(--warn)}
+.entrada[data-s=no]{background:var(--no);color:#fff}
+.entrada b{font:800 28px/1 'Barlow Condensed','Inter Tight',sans-serif;text-transform:uppercase;letter-spacing:.005em}
+.entrada small{opacity:.8;margin-top:4px}
+@keyframes entra{from{opacity:0;transform:translateX(24px)}}
+
+/* PIN recién generado y botones del diálogo de credencial */
+.pin{margin:0 0 20px;font:800 clamp(48px,9vw,72px)/1 'Barlow Condensed','Inter Tight',sans-serif;letter-spacing:.08em;color:var(--acc)}
+.pin small{display:block;margin-top:8px;font:400 14px/1.4 'Inter Tight',sans-serif;letter-spacing:0;color:var(--ink);opacity:.75}
+#cr-l{text-overflow:ellipsis}
+.acts.cr{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start}
+.acts.cr .btn{min-height:44px;padding:0 16px}
+
+@media (prefers-reduced-motion:reduce){.entrada{animation:none}.toast{transition:opacity 150ms ease;transform:translateX(-50%)}}

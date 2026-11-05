@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Control de entrada · Apolo GYM</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/entrada.css">
+</head>
+<body class="adm ent">
+<header class="eh w">
+ <a class="brand" href="admin.html"><img src="img/logo.png" width="40" height="40" alt=""><b>Control de entrada</b></a>
+ <label class="es"><span class="sm">Sucursal</span><select id="su" aria-label="Sucursal de este control"></select></label>
+</header>
+
+<main id="ek" class="w">
+ <section id="idle">
+  <div class="ei">
+   <h1>Marca tu entrada</h1>
+   <p class="s3">Escribe tu PIN o muestra tu código QR.</p>
+   <button class="btn alt" id="cam" type="button" hidden>Escanear QR con la cámara</button>
+  </div>
+  <div class="pad">
+   <output id="dots" aria-label="Dígitos del PIN"><i></i><i></i><i></i><i></i><i></i><i></i></output>
+   <div class="keys" id="keys" role="group" aria-label="Teclado numérico">
+    <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+    <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+    <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+    <button type="button" data-k="c" aria-label="Borrar todo">C</button><button type="button" data-k="0">0</button><button type="button" data-k="b" aria-label="Borrar un dígito">←</button>
+   </div>
+  </div>
+ </section>
+
+ <section id="vid" hidden>
+  <video id="v" playsinline muted></video>
+  <p class="s3">Acerca tu QR a la cámara.</p>
+  <button class="btn alt" id="camx" type="button">Cancelar</button>
+ </section>
+
+ <section id="res" hidden aria-live="assertive"></section>
+</main>
+<div id="tm" hidden></div>
+
+<dialog id="lk"><form method="dialog" id="fk"><h3 class="s3">Administración</h3><p class="sm" id="lm"></p><label class="fld">Clave de administrador<input type="password" id="lc" autocomplete="current-password" required></label><div class="acts"><button class="btn" value="ok">Entrar</button></div></form></dialog>
+<div class="toast" id="ts" role="status"></div>
+
+<script src="js/vendor/jsQR.js"></script>
+<script type="module" src="js/entrada.js"></script>
+</body>
+</html>

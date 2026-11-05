@@ -1,0 +1,40 @@
+/* Control de entrada: pantalla de la puerta (tableta o PC). Colores de resultado a pantalla completa. */
+body.ent{min-height:100dvh;display:grid;grid-template-rows:auto 1fr;background:var(--bg);color:var(--ink);transition:background-color 200ms var(--out),color 200ms var(--out)}
+body.ent[data-s=ok]{background:var(--ok);color:#0D0D0C}
+body.ent[data-s=warn]{background:var(--warn);color:#0D0D0C}
+body.ent[data-s=no]{background:var(--no);color:#fff}
+.eh{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:68px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700}
+.brand img{display:block}
+.es{display:flex;align-items:center;gap:10px}
+.es select{min-height:44px;padding:0 12px;font:inherit;font-size:16px;color:inherit;background:var(--tone);border:0}
+body.ent[data-s] .es select{background:rgb(0 0 0/.18);color:inherit}
+#ek{display:grid;place-items:center;padding-block:var(--m)}
+#idle{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,6vw,96px);width:min(100%,1100px);align-items:center}
+.ent h1{font-size:var(--s2);margin-bottom:20px}
+.ei .s3{max-width:16ch;margin-bottom:32px}
+
+/* Teclado numérico */
+.pad{display:grid;gap:24px;width:min(100%,400px);justify-self:end}
+#dots{display:flex;justify-content:center;gap:16px}
+#dots i{width:18px;height:18px;border:2px solid currentColor;border-radius:50%;transition:background-color 120ms var(--out),border-color 120ms var(--out),transform 160ms var(--out)}
+#dots i.on{background:var(--acc);border-color:var(--acc);transform:scale(1.2)}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.keys button{min-height:clamp(64px,11vh,96px);background:var(--tone);font:800 clamp(30px,5.4vh,46px)/1 'Barlow Condensed','Inter Tight',sans-serif;transition:transform 100ms var(--out),background-color 100ms var(--out),color 100ms var(--out)}
+.keys button:active{transform:scale(.95);background:var(--acc);color:var(--on)}
+@media (hover:hover) and (pointer:fine){.keys button:hover{background:color-mix(in srgb,var(--tone) 70%,var(--ink))}}
+
+/* Cámara */
+#vid{display:grid;gap:20px;justify-items:center;text-align:center}
+#vid video{width:min(92vw,520px);aspect-ratio:1;object-fit:cover;background:#000}
+
+/* Resultado */
+#res{width:min(100%,960px)}
+.st2{margin-bottom:16px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.inf{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px 28px;margin-top:clamp(28px,5vw,56px)}
+.inf dt{font-size:14px;opacity:.75}
+.inf dd{font-size:clamp(20px,2.2vw,28px);font-weight:600;letter-spacing:-.02em;line-height:1.15;overflow-wrap:anywhere}
+#tm{position:fixed;left:0;right:0;bottom:0;height:5px;background:currentColor;transform-origin:left;opacity:.6}
+body.ent .toast{z-index:50}
+
+@media (max-width:860px){#idle{grid-template-columns:1fr;gap:28px}.pad{justify-self:center}.ei .s3{max-width:none;margin-bottom:20px}}
