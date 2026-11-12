@@ -1,6 +1,6 @@
 # Apolo GYM — frontend y backend separados
 
-El frontend se publica en **Vercel**, la API en **Railway** y la base de datos es **MySQL**. El dominio del frontend ya configurado es `https://proyectogym-zeta.vercel.app`.
+El frontend se publica en **Vercel**, la API en **Railway** y la base de datos es **MySQL**. El dominio del frontend ya configurado es `https://frontend-frmi.vercel.app`.
 
 > Importante: el backend usa `mysql2` y consultas SQL de MySQL (`?`, `CURDATE()`, `TIME_FORMAT()`, etc.). El `.env.local` del ZIP original conservaba valores antiguos de Supabase/PostgreSQL (`5432`), pero no corresponden al motor que usa la aplicación. No copies esas variables PostgreSQL a Railway. Usa un servicio MySQL.
 
@@ -23,6 +23,14 @@ Apolo_GYM_Deploy/
 │   └── railway.json
 └── vercel.json                # Permite desplegar desde la raíz del repositorio
 ```
+
+## Datos que muestra tu captura actual de Railway
+
+La captura corresponde al servicio `proyecto_GYM` y muestra `RAILWAY_PRIVATE_DOMAIN=proyectogym.railway.internal`. Ese dominio es la dirección privada del servicio `proyecto_GYM`; **no es el host de la base MySQL** ni un dominio público para configurar `VITE_API_URL`. En esa captura tampoco aparecen `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER` ni `MYSQLPASSWORD`.
+
+Para continuar, abre el apartado de servicios del mismo proyecto Railway y confirma que exista un servicio **MySQL**. En las variables de ese servicio deben aparecer las cuatro variables `MYSQL*`. Luego, desde las variables del servicio `proyecto_GYM`, crea referencias a esas variables usando el nombre real del servicio MySQL, por ejemplo `DB_HOST=${{MySQL.MYSQLHOST}}`. Si todavía no existe un servicio MySQL, créalo primero con **New → Database → MySQL**. No uses `proyectogym.railway.internal` como `DB_HOST`.
+
+Para que Vercel pueda llamar a la API, también debes generar un dominio público para el backend desde Railway → `proyecto_GYM` → Settings → Networking → Generate Domain. El dominio privado `.railway.internal` solo sirve dentro de la red privada de Railway.
 
 ## 1. Base de datos MySQL en Railway
 
@@ -48,8 +56,8 @@ DB_PORT=${{MySQL.MYSQLPORT}}
 DB_USER=${{MySQL.MYSQLUSER}}
 DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
 DB_NAME=Proyecto_GYM
-APP_URL=https://proyectogym-zeta.vercel.app
-CORS_ORIGINS=https://proyectogym-zeta.vercel.app
+APP_URL=https://frontend-frmi.vercel.app
+CORS_ORIGINS=https://frontend-frmi.vercel.app
 ADMIN_TOKEN=REEMPLAZA_POR_UN_TOKEN_ALEATORIO_LARGO
 PIN_SECRET=REEMPLAZA_POR_UN_SECRETO_ALEATORIO_LARGO
 ```
@@ -87,7 +95,7 @@ Hay dos formas válidas de configurar Vercel. Para evitar errores de carpeta ra�
 - Install Command: `npm ci`.
 - Agrega la misma variable `VITE_API_URL`. En esa carpeta está incluido su propio `vercel.json`.
 
-Dominio de producción: `https://proyectogym-zeta.vercel.app`. El panel administrativo queda en `/admin.html` y el control de acceso en `/entrada.html`.
+Dominio de producción: `https://frontend-frmi.vercel.app`. El panel administrativo queda en `/admin.html` y el control de acceso en `/entrada.html`.
 
 La compilación ya no se aborta si aún no existe `VITE_API_URL`, pero las llamadas a la API no funcionarán hasta que agregues la URL de Railway y vuelvas a desplegar.
 

@@ -14,7 +14,7 @@ export const adminToken = process.env.ADMIN_TOKEN || '';
 export const pinSecret = process.env.PIN_SECRET || adminToken || 'cambia-este-secreto-en-produccion';
 
 // URL pública del frontend (Vercel). Stripe regresa al navegador a este dominio.
-const urlFrontend = (process.env.APP_URL || 'https://proyectogym-zeta.vercel.app').replace(/\/$/, '');
+const urlFrontend = (process.env.APP_URL || 'https://frontend-frmi.vercel.app').replace(/\/$/, '');
 
 export const pagos = {
   stripeClave: process.env.STRIPE_SECRET_KEY || '',
@@ -49,7 +49,7 @@ export const db = {
 // Se aceptan varios orígenes separados por coma. Nunca se habilita CORS para cualquier dominio.
 export const corsOrigins = new Set([
   urlFrontend,
-  'https://proyectogym-zeta.vercel.app',
+  'https://frontend-frmi.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   ...(process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim().replace(/\/$/, '')).filter(Boolean),
