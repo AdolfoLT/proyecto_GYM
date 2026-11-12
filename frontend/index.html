@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apolo GYM</title>
+<meta name="theme-color" content="#0D0D0C">
+<link rel="icon" type="image/x-icon" href="img/favicon.ico">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" href="fonts/barlow-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/acceso.css">
+</head>
+<body>
+<i class="prog" aria-hidden="true"></i>
+<nav class="w"><a class="brand" href="#"><img src="img/logo.png" width="40" height="40" alt=""><b id="lg"></b></a><ul class="sm"><li><a href="#clases">Clases</a></li><li><a href="#planes">Planes</a></li><li><a href="#sucursales">Sucursales</a></li></ul><a class="btn" href="#unete">Inscríbete</a></nav>
+
+<header class="hero w">
+ <p class="st" id="st" data-r></p>
+ <div class="hh">
+  <h1 id="nm" class="sp"></h1>
+  <img class="logo-h" src="img/logo.png" width="447" height="447" alt="Logotipo de Apolo GYM: un triángulo amarillo con una A y una barra con pesas" data-r style="--i:2">
+ </div>
+ <div class="g hb"><p id="tg" data-r style="--i:2"></p><div class="acts" data-r style="--i:3"><a class="btn" href="#unete">Inscríbete hoy</a><a class="u" href="#clases">Ver clases</a></div></div>
+</header>
+
+<section class="tone w ab">
+ <div class="g"><p id="ds" data-r></p><div class="stats" id="sts"></div></div>
+ <div class="mq" id="am" role="list" aria-label="Clases"></div>
+</section>
+
+<section class="w cl" id="clases">
+ <div class="g"><h2 data-r>Clases cada día.</h2><div class="bd" data-r style="--i:1"><div class="days" id="dy"></div><div class="rows" id="rw"></div></div></div>
+</section>
+
+<section class="tone w" id="planes">
+ <div class="g ph"><h2 data-r>Elige cómo entrenar.</h2><div class="seg" role="group" aria-label="Mostrar precio"><button id="b0" aria-pressed="true">Pago total</button><button id="b1" aria-pressed="false">Por mes</button></div></div>
+ <div class="pl" id="pl"></div>
+ <p class="pass sm">Paga en línea, en recepción de tu sucursal o por transferencia (si está disponible).</p>
+</section>
+
+<section class="w sv" id="sucursales">
+ <h2 data-r>Cerca de ti.</h2>
+ <div id="sv"></div>
+</section>
+
+<section class="inv w un" id="unete">
+ <div class="g">
+  <div class="uh" data-r><h2>Empieza hoy.</h2><p class="s3">Regístrate y recibe tu ID de socio al instante.</p></div>
+  <div class="ub" data-r style="--i:1">
+   <form id="fm" class="fm" novalidate>
+    <label><span>Nombre(s)</span><input name="nombres" required maxlength="100" autocomplete="given-name"></label>
+    <label><span>Apellido paterno</span><input name="apellidoPaterno" required maxlength="50" autocomplete="family-name"></label>
+    <label><span>Apellido materno <small>(opcional)</small></span><input name="apellidoMaterno" maxlength="50"></label>
+    <label><span>Fecha de nacimiento <small>(opcional)</small></span><input name="fechaNacimiento" type="date" autocomplete="bday"></label>
+    <label><span>Correo</span><input name="email" type="email" required maxlength="150" autocomplete="email"></label>
+    <label><span>Teléfono <small>(opcional)</small></span><input name="telefono" type="tel" maxlength="15" autocomplete="tel"></label>
+    <label><span>Sucursal</span><select name="idSucursal" id="f-suc" required></select></label>
+    <label><span>Plan</span><select name="idPlan" id="f-plan"></select></label>
+    <fieldset class="pg" id="f-pago" hidden><legend>¿Cómo quieres pagar?</legend><div id="f-pago-o"></div></fieldset>
+    <p class="msg full" id="fm-msg" role="alert"></p>
+    <button class="btn full" type="submit">Crear mi cuenta de socio</button>
+   </form>
+   <div class="tk" id="tk" hidden>
+    <p class="sm">Bienvenido, <span id="tk-n"></span></p>
+    <p class="tkid" id="tk-id" aria-live="polite"></p>
+    <div class="tk-cut" aria-hidden="true"></div>
+    <p id="tk-d"></p>
+    <div class="acts2"><button class="btn alt" id="tk-c" type="button">Copiar ID</button><a class="u" href="#clases">Reservar una clase</a></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<footer class="inv w"><div class="big sp" id="bg" aria-hidden="true"></div><div class="ft sm"><span id="cp"></span><div id="fl"></div></div></footer>
+
+<dialog id="dlg" aria-labelledby="dlg-t">
+ <form id="rs" novalidate>
+  <p class="sm">Reservar clase</p>
+  <h3 class="s3" id="dlg-t"></h3>
+  <p id="dlg-m" class="dm"></p>
+  <label><span>Tu ID de socio</span><input id="rs-id" maxlength="15" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="BG2026102400001" required></label>
+  <p class="msg" id="rs-msg" role="alert"></p>
+  <div class="acts2"><button class="btn" type="submit">Confirmar lugar</button><button class="u" type="button" data-cerrar>Cancelar</button></div>
+ </form>
+ <div id="rs-ok" hidden>
+  <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chk" d="M5 13l4 4L19 7"/></svg>
+  <h3 class="s3">Lugar apartado.</h3>
+  <p id="rs-ok-t"></p>
+  <div class="acts2"><button class="btn" type="button" data-cerrar>Listo</button></div>
+ </div>
+</dialog>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

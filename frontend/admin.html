@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin · Apolo GYM</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/favicon.ico">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="adm">
+<nav class="w"><b id="lg">Admin</b><a class="u sm" href="index.html">Ver sitio</a><a class="btn" href="entrada.html" target="_blank" rel="noopener">Control de entrada</a></nav>
+<div class="tabs w" id="tb" role="group" aria-label="Secciones"></div>
+
+<main class="w">
+ <div class="top"><h2 id="ti"></h2>
+  <div class="tools" id="to"><div id="ch"></div><input id="q" type="search" placeholder="Buscar" aria-label="Buscar"><button class="btn" id="ad"></button></div>
+ </div>
+ <div id="vw"></div>
+</main>
+
+<dialog id="lk"><form method="dialog" id="fk"><h3 class="s3">Administración</h3><p class="sm" id="lm"></p><label class="fld">Clave de administrador<input type="password" id="lc" autocomplete="current-password" required></label><div class="acts"><button class="btn" value="ok">Entrar</button></div></form></dialog>
+<dialog id="dl"><form method="dialog" id="fm"></form></dialog>
+<div class="toast" id="ts" role="status"></div>
+
+<div class="entradas" id="en" aria-live="polite"></div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
