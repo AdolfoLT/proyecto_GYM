@@ -1,6 +1,11 @@
 import mysql from 'mysql2/promise';
 import { db } from './config.js';
+import postgres from 'postgres'
 
+const connectionString = process.env.DATABASE_URL
+const sql = postgres(connectionString)
+
+export default sql
 export const pool = mysql.createPool({
   ...db,
   waitForConnections: true,
