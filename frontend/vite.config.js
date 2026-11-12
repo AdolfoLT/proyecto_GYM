@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
       proxy: {
         '/api': {
-          target: env.API_PROXY_TARGET || 'http://localhost:3000',
+          target: env.API_PROXY_TARGET || 'https://frontend-frmi.vercel.app',
           changeOrigin: true,
         },
       },
