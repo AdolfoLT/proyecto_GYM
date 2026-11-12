@@ -1,61 +1,97 @@
 # Apolo GYM — frontend y backend separados
 
-El proyecto está organizado para desplegar el **frontend en Vercel** y la **API en Railway**. La base de datos que utiliza el código es MySQL. El `.env.local` original no se incluye porque contiene configuración privada: copia sus valores necesarios a las variables de Railway, no al repositorio.
+El frontend se publica en **Vercel**, la API en **Railway** y la base de datos es **MySQL**. El dominio del frontend ya configurado es `https://proyectogym-zeta.vercel.app`.
+
+> Importante: el backend usa `mysql2` y consultas SQL de MySQL (`?`, `CURDATE()`, `TIME_FORMAT()`, etc.). El `.env.local` del ZIP original conservaba valores antiguos de Supabase/PostgreSQL (`5432`), pero no corresponden al motor que usa la aplicación. No copies esas variables PostgreSQL a Railway. Usa un servicio MySQL.
 
 ## Estructura
 
 ```text
 Apolo_GYM_Deploy/
-├── frontend/                  # Sitio estático multipágina (Vite)
+├── frontend/                  # Sitio multipágina con Vite
 │   ├── index.html
 │   ├── admin.html
 │   ├── entrada.html
 │   ├── mi-acceso.html
 │   ├── pago.html
 │   ├── css/ js/ img/ fonts/
+│   └── package.json
+├── backend/                   # API Express + MySQL + Stripe
+│   ├── server/
+│   ├── database/
 │   ├── package.json
-│   ├── vite.config.js
-│   └── vercel.json
-└── backend/                   # API Express + MySQL + Stripe
-    ├── server/
-    ├── database/
-    ├── package.json
-    ├── .env.example
-    └── railway.json
+│   └── railway.json
+└── vercel.json                # Permite desplegar desde la raíz del repositorio
 ```
 
-## 1. Preparar la base de datos MySQL
+## 1. Base de datos MySQL en Railway
 
-Crea una base MySQL y ejecuta los archivos de `backend/database/README.md` en el orden indicado. `proyecto_GYM.sql` es para una base nueva; si ya tienes una base en uso, respáldala y migra sus datos, y no vuelvas a ejecutar migraciones que ya aplicaste.
+1. En el mismo proyecto de Railway, pulsa **New → Database → MySQL**.
+2. Espera a que MySQL termine de desplegarse.
+3. Importa el esquema de `backend/database/proyecto_GYM.sql` en la instancia MySQL. Ese script crea la base `Proyecto_GYM`.
+4. Después ejecuta los scripts adicionales que correspondan, siguiendo el orden de `backend/database/README.md`. No vuelvas a ejecutar migraciones ya aplicadas sobre una base con datos.
+5. Conserva un respaldo de la base anterior antes de migrar los datos.
 
-Para Railway, crea un servicio MySQL y conecta sus variables (`MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, `MYSQLDATABASE`) al servicio de la API. El backend también acepta los nombres `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME`.
+## 2. Backend en Railway
 
-## 2. Desplegar el backend en Railway
+En Railway, crea el servicio Node desde este mismo repositorio y configura:
 
-1. Sube esta carpeta del proyecto a un repositorio Git.
-2. En Railway crea un proyecto y añade un servicio desde ese repositorio.
-3. En la configuración del servicio define **Root Directory** como `/backend`.
-4. En **Config as Code** indica la ruta absoluta `/backend/railway.json` (Railway resuelve el archivo de configuración desde la raíz del repositorio, incluso cuando cambias Root Directory).
-5. Añade las variables MySQL referenciadas desde tu servicio de base de datos. Por ejemplo, si el servicio se llama `MySQL`: `DB_HOST=${{MySQL.MYSQLHOST}}`, `DB_PORT=${{MySQL.MYSQLPORT}}`, `DB_USER=${{MySQL.MYSQLUSER}}` y `DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}`. Define además **`DB_NAME=Proyecto_GYM`** para que la API use el nombre de base que crea `proyecto_GYM.sql`.
-6. Configura `ADMIN_TOKEN` y `PIN_SECRET` con cadenas privadas aleatorias largas. No reutilices los valores de ejemplo. Si ya existen PIN registrados en tu base de datos, conserva en `PIN_SECRET` el valor que usaba la instalación anterior: como el `.env.local` original no definía `PIN_SECRET`, el código anterior utilizaba `ADMIN_TOKEN` como secreto de los PIN. Cambiarlo invalida los PIN existentes.
-7. Cuando tengas el dominio final de Vercel, define `APP_URL` con `https://tu-dominio.vercel.app` y `CORS_ORIGINS` con ese mismo origen, sin diagonal final. Puedes agregar varios dominios separados por comas.
-8. Despliega. Railway ejecutará `npm start`; el health check está configurado en `/api/health`.
-9. Verifica `https://TU-API.up.railway.app/api/health`. Debe responder `{"ok":true,"service":"apolo-gym-api"}`.
+- **Root Directory:** `/backend`
+- **Config as Code:** `/backend/railway.json`
+- **Start Command:** `npm start` (lo define también `railway.json`)
 
-Variables opcionales: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `PAGO_TRANSFERENCIA`, `TRANSFERENCIA_DATOS` y las variables `GYM_*`. Para usar Stripe configura también el webhook `https://TU-API.up.railway.app/api/pagos/webhook` en Stripe.
+En las variables del servicio backend agrega estas referencias. Si tu servicio de base de datos no se llama `MySQL`, reemplaza `MySQL` por su nombre exacto (el selector de Railway puede insertarlas automáticamente):
 
-## 3. Desplegar el frontend en Vercel
+```env
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=${{MySQL.MYSQLPORT}}
+DB_USER=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+DB_NAME=Proyecto_GYM
+APP_URL=https://proyectogym-zeta.vercel.app
+CORS_ORIGINS=https://proyectogym-zeta.vercel.app
+ADMIN_TOKEN=REEMPLAZA_POR_UN_TOKEN_ALEATORIO_LARGO
+PIN_SECRET=REEMPLAZA_POR_UN_SECRETO_ALEATORIO_LARGO
+```
 
-1. Importa el mismo repositorio en Vercel.
-2. En **Root Directory** selecciona `frontend`.
-3. Vercel detectará Vite; la configuración incluida compila con `npm run build` y publica `dist`.
-4. En las variables de entorno de Vercel crea `VITE_API_URL` con el dominio público del backend Railway, por ejemplo `https://TU-API.up.railway.app` (sin `/api`).
-5. Despliega el frontend.
-6. Vuelve a Railway y asegúrate de que `APP_URL` y `CORS_ORIGINS` contengan el dominio real asignado por Vercel. Si cambias el dominio, actualiza esas variables y redepliega la API.
+**No pongas `DB_HOST=localhost`, `127.0.0.1` ni `::1` en Railway.** `localhost` significa el mismo contenedor del backend, no el servicio de MySQL. La configuración del código da prioridad a `MYSQLHOST` y ahora mostrará un error explícito si detecta un host local en Railway.
 
-Los paneles quedan en `/admin.html` y `/entrada.html`; el sitio público queda en `/`.
+`PIN_SECRET` debe conservar exactamente el secreto usado para generar los PIN existentes. En la versión anterior, si no se había definido `PIN_SECRET`, se utilizaba `ADMIN_TOKEN` como respaldo. Cambiarlo invalida esos PIN. No publiques estos secretos ni los subas a Git.
 
-## 4. Ejecutar en local
+Variables opcionales de Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `PAGO_TRANSFERENCIA` y `TRANSFERENCIA_DATOS`. Al configurar Stripe, el webhook será `https://TU-API.up.railway.app/api/pagos/webhook`.
+
+Cuando Railway genere un dominio público para el backend, verifica:
+
+```text
+https://TU-API.up.railway.app/api/health
+```
+
+Debe responder `{"ok":true,"service":"apolo-gym-api"}`. Si el backend sigue sin iniciar, revisa el log: ya no debería intentar conectarse a `::1:3306`.
+
+## 3. Frontend en Vercel
+
+Hay dos formas válidas de configurar Vercel. Para evitar errores de carpeta raíz, recomiendo la primera:
+
+### Opción recomendada: desplegar desde la raíz del repositorio
+
+- **Root Directory:** `.` (raíz del repositorio; no selecciones `backend` ni `frontend`).
+- Vercel usará el `vercel.json` de la raíz: instala dependencias dentro de `frontend`, ejecuta Vite y publica `frontend/dist`.
+- En **Environment Variables** agrega `VITE_API_URL` con el dominio público de Railway, sin `/api` al final. Ejemplo: `https://TU-API.up.railway.app`.
+- Aplica la variable a Production (y Preview si también publicarás previews) y vuelve a desplegar.
+
+### Opción alternativa: usar `frontend` como Root Directory
+
+- **Root Directory:** `frontend`.
+- Build Command: `npm run build`.
+- Output Directory: `dist`.
+- Install Command: `npm ci`.
+- Agrega la misma variable `VITE_API_URL`. En esa carpeta está incluido su propio `vercel.json`.
+
+Dominio de producción: `https://proyectogym-zeta.vercel.app`. El panel administrativo queda en `/admin.html` y el control de acceso en `/entrada.html`.
+
+La compilación ya no se aborta si aún no existe `VITE_API_URL`, pero las llamadas a la API no funcionarán hasta que agregues la URL de Railway y vuelvas a desplegar.
+
+## 4. Desarrollo local
 
 Necesitas Node.js 22.12 o superior y MySQL.
 
@@ -63,9 +99,9 @@ Terminal 1 — backend:
 
 ```powershell
 cd backend
-npm install
+npm ci
 Copy-Item .env.example .env
-# Edita .env con tus datos reales de MySQL y secretos.
+# Edita .env con los datos reales de MySQL y los secretos.
 npm run dev
 ```
 
@@ -73,19 +109,16 @@ Terminal 2 — frontend:
 
 ```powershell
 cd frontend
-npm install
+npm ci
 Copy-Item .env.example .env.local
-# Para desarrollo local puedes dejar VITE_API_URL vacía o comentada.
 npm run dev
 ```
 
-Vite sirve el frontend en `http://localhost:5173` y reenvía `/api` a `http://localhost:3000`. Para conectar con otro puerto, cambia `API_PROXY_TARGET`.
+Vite sirve el sitio en `http://localhost:5173` y reenvía `/api` a `http://localhost:3000`.
 
-## Seguridad y notas
+## Seguridad
 
-- **No subas `.env`, `.env.local`, claves Stripe, contraseñas ni tokens al repositorio.** Los archivos `.env.example` solo contienen nombres y valores ilustrativos.
-- `ADMIN_TOKEN` protege `/api/admin`; el panel lo solicita y conserva únicamente en `sessionStorage` durante esa pestaña.
-- `PIN_SECRET` debe mantenerse estable. Si lo cambias, los PIN guardados dejan de validarse. En una migración desde tu `.env.local` original, usa el antiguo `ADMIN_TOKEN` como `PIN_SECRET` para conservar los PIN actuales.
-- `APP_URL` es el dominio del frontend: se utiliza para los retornos de Stripe y los enlaces de acceso digital.
-- `CORS_ORIGINS` admite una lista de orígenes separados por comas. Incluye el dominio productivo y cada dominio preview de Vercel que quieras permitir.
-- El backend ya no sirve los HTML del frontend: ambos servicios se despliegan por separado.
+- No subas `.env`, `.env.local`, credenciales MySQL, claves Stripe ni tokens al repositorio.
+- `ADMIN_TOKEN` protege el panel `/admin.html`.
+- `PIN_SECRET` debe mantenerse estable mientras existan PIN que deban seguir funcionando.
+- `APP_URL` y `CORS_ORIGINS` deben contener el dominio actual de Vercel. Si lo cambias, actualízalos en Railway y redepliega la API.

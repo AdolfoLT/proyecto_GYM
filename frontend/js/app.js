@@ -250,7 +250,7 @@ async function init() {
   } catch (err) {
     console.error('No se pudo cargar el gimnasio:', err);
     document.documentElement.classList.remove('js');
-    document.body.insertAdjacentHTML('afterbegin', '<p class="err">No se pudieron cargar los datos. Revisa que el servidor Node esté corriendo y que MySQL esté conectado.</p>');
+    document.body.insertAdjacentHTML('afterbegin', '<p class="err">No se pudo conectar con Apolo GYM. Comprueba que VITE_API_URL apunte a la API pública de Railway, que Railway esté activo y que su base de datos MySQL esté conectada.</p>');
     return;
   }
   partir($('#nm'));

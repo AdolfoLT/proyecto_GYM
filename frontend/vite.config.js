@@ -7,9 +7,9 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, root, '');
 
-  if (mode === 'production' && !env.VITE_API_URL) {
-    throw new Error('Falta VITE_API_URL. Configura la URL pública de Railway en las variables de Vercel.');
-  }
+  // La URL de Railway se define en Vercel como VITE_API_URL.
+  // No detenemos el build si falta: el sitio debe poder publicarse y mostrar
+  // un aviso de conexión en pantalla mientras se termina de configurar la API.
 
   return {
     appType: 'mpa',

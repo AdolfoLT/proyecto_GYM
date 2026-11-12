@@ -14,7 +14,7 @@ export const adminToken = process.env.ADMIN_TOKEN || '';
 export const pinSecret = process.env.PIN_SECRET || adminToken || 'cambia-este-secreto-en-produccion';
 
 // URL pública del frontend (Vercel). Stripe regresa al navegador a este dominio.
-const urlFrontend = (process.env.APP_URL || 'http://localhost:5173').replace(/\/$/, '');
+const urlFrontend = (process.env.APP_URL || 'https://proyectogym-zeta.vercel.app').replace(/\/$/, '');
 
 export const pagos = {
   stripeClave: process.env.STRIPE_SECRET_KEY || '',
@@ -26,18 +26,30 @@ export const pagos = {
 };
 
 // Railway MySQL expone MYSQLHOST/MYSQLPORT/MYSQLUSER/MYSQLPASSWORD/MYSQLDATABASE.
-// También se admiten los nombres DB_* para desarrollo local u otros proveedores.
+// Priorizamos MYSQL* para que un DB_HOST=localhost antiguo no apunte al contenedor.
+// DB_* sigue disponible para desarrollo local u otros proveedores MySQL.
+const enRailway = Boolean(
+  process.env.RAILWAY_PROJECT_ID || process.env.RAILWAY_ENVIRONMENT_ID || process.env.RAILWAY_SERVICE_ID
+);
+const hostMySQL = String(process.env.MYSQLHOST || process.env.DB_HOST || '').trim();
+if (enRailway && (!hostMySQL || ['localhost', '127.0.0.1', '::1'].includes(hostMySQL.toLowerCase()))) {
+  throw new Error(
+    'MySQL no está configurado para Railway. En Variables del backend agrega DB_HOST=${{MySQL.MYSQLHOST}}, DB_PORT=${{MySQL.MYSQLPORT}}, DB_USER=${{MySQL.MYSQLUSER}} y DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}. Cambia "MySQL" por el nombre real de tu servicio de base de datos.'
+  );
+}
+
 export const db = {
-  host: process.env.DB_HOST || process.env.MYSQLHOST || '127.0.0.1',
-  port: Number(process.env.DB_PORT || process.env.MYSQLPORT) || 3306,
-  user: process.env.DB_USER || process.env.MYSQLUSER || 'root',
-  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
+  host: hostMySQL || '127.0.0.1',
+  port: Number(process.env.MYSQLPORT || process.env.DB_PORT) || 3306,
+  user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+  password: process.env.MYSQLPASSWORD ?? process.env.DB_PASSWORD ?? '',
   database: process.env.DB_NAME || process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || 'Proyecto_GYM',
 };
 
 // Se aceptan varios orígenes separados por coma. Nunca se habilita CORS para cualquier dominio.
 export const corsOrigins = new Set([
   urlFrontend,
+  'https://proyectogym-zeta.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   ...(process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim().replace(/\/$/, '')).filter(Boolean),
